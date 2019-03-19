@@ -1,0 +1,12 @@
+<mujoco>
+
+	<variable name="x_pos" value="0"/>
+	<variable name="y_pos" value="1"/>
+	<variable name="z_pos" value="2"/>
+
+	<worldbody>
+		<body pos="${x_pos} ${y_pos} ${z_pos}">
+			<geom type="cylinder" size="0.5 1.5"/>
+		</body>
+	</worldbody>
+</mujoco>

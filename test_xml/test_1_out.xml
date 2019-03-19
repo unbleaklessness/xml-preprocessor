@@ -1,0 +1,8 @@
+<mujoco>
+
+	<worldbody>
+		<body pos="0 1 2">
+			<geom size="0.5 1.5" type="cylinder" />
+		</body>
+	</worldbody>
+</mujoco>
