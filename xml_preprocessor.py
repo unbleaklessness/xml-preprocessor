@@ -15,8 +15,8 @@ def main():
     data = f.read()
     f.close()
     
-    r_exec = r'\$\{([^\}]*)\}'
-    r_eval = r'\$\(([^\)]*)\)'
+    r_exec = r'\$\{\{([^\}\{]*)\}\}'
+    r_eval = r'\$\{([^\}\{]*)\}'
     
     while True:
         search = re.search(r_exec, data)
