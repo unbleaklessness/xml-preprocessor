@@ -37,7 +37,7 @@ def main():
         for key, value in element.attrib.items():
             new_value = value
             for v_key, v_value in variables.items():
-                new_value = re.sub(r'\$\{(?:(?:%s)[^\}]*)\}' % v_key, v_value, new_value)
+                new_value = re.sub(r'\$\{(?:%s)\}' % v_key, v_value, new_value)
             element.set(key, new_value)
 
     tree.write(out_path)
