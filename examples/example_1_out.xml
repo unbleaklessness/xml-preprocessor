@@ -1,8 +1,7 @@
 <mujoco>
-
 	<worldbody>
 		<body pos="0 1 2">
-			<geom size="0.5 1.5" type="cylinder" />
+			<geom size="1.4142135623730951 2" type="cylinder" />
 		</body>
 	</worldbody>
 </mujoco>

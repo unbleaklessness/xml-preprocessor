@@ -1,18 +1,25 @@
 import xml.etree.ElementTree as ET
 import sys
 import re
+from math import *
 
 TAG_NAME = 'variable'
 NAME_ATTRIBUTE = 'name'
 VALUE_ATTRIBUTE = 'value'
 
-variables = dict()
-
 def is_variable_element(element):
     return element.tag == TAG_NAME and NAME_ATTRIBUTE in element.attrib and VALUE_ATTRIBUTE in element.attrib
 
-def add_to_variables(variables, element):
-    variables[element.attrib[NAME_ATTRIBUTE]] = element.attrib[VALUE_ATTRIBUTE]
+def pair_from_variable_element(element):
+    return (element.attrib[NAME_ATTRIBUTE], eval(element.attrib[VALUE_ATTRIBUTE]))
+
+def substitude_pair(pair, root):
+    v_key, v_value = pair
+
+    for element in root.iter():
+        for key, value in element.attrib.items():
+            new_value = re.sub(r'\$\{.*(?:%s)[^\}]*\}' % v_key, str(v_value), value)
+            element.set(key, new_value)
 
 def main():
     if len(sys.argv) != 3:
@@ -27,18 +34,11 @@ def main():
     root = tree.getroot()
 
     # Get variables:
-    for child in reversed(root):
+    for child in list(root):
         if is_variable_element(child):
-            add_to_variables(variables, child)
+            pair = pair_from_variable_element(child)
             root.remove(child)
-
-    # Substitude variables:
-    for element in root.iter():
-        for key, value in element.attrib.items():
-            new_value = value
-            for v_key, v_value in variables.items():
-                new_value = re.sub(r'\$\{(?:%s)\}' % v_key, v_value, new_value)
-            element.set(key, new_value)
+            substitude_pair(pair, root)
 
     tree.write(out_path)
 
