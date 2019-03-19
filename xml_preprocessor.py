@@ -1,25 +1,6 @@
-import xml.etree.ElementTree as ET
 import sys
 import re
 from math import *
-
-TAG_NAME = 'variable'
-NAME_ATTRIBUTE = 'name'
-VALUE_ATTRIBUTE = 'value'
-
-def is_variable_element(element):
-    return element.tag == TAG_NAME and NAME_ATTRIBUTE in element.attrib and VALUE_ATTRIBUTE in element.attrib
-
-def pair_from_variable_element(element):
-    return (element.attrib[NAME_ATTRIBUTE], eval(element.attrib[VALUE_ATTRIBUTE]))
-
-def substitude_pair(pair, root):
-    v_key, v_value = pair
-
-    for element in root.iter():
-        for key, value in element.attrib.items():
-            new_value = re.sub(r'\$\{.*(?:%s)[^\}]*\}' % v_key, str(v_value), value)
-            element.set(key, new_value)
 
 def main():
     if len(sys.argv) != 3:
@@ -30,17 +11,28 @@ def main():
     in_path = sys.argv[1]
     out_path = sys.argv[2]
     
-    tree = ET.parse(in_path)
-    root = tree.getroot()
-
-    # Get variables:
-    for child in list(root):
-        if is_variable_element(child):
-            pair = pair_from_variable_element(child)
-            root.remove(child)
-            substitude_pair(pair, root)
-
-    tree.write(out_path)
-
+    f = open(in_path, 'r')
+    data = f.read()
+    f.close()
+    
+    r_exec = r'\$\{([^\}]*)\}'
+    r_eval = r'\$\(([^\)]*)\)'
+    
+    while True:
+        search = re.search(r_exec, data)
+        if search == None:
+            break
+        exec(search.group(1))
+        data = re.sub(r_exec, '', data, 1)
+    
+    while True:
+        search = re.search(r_eval, data)
+        if search == None:
+            break
+        data = re.sub(r_eval, str(eval(search.group(1))), data, 1)
+    
+    f = open(out_path, 'w')
+    f.write(data)
+   
 if __name__ == '__main__':
     main()

@@ -1,12 +1,14 @@
 <mujoco>
-	<variable name="x_pos" value="0"/>
-	<variable name="y_pos" value="1"/>
-	<variable name="z_pos" value="2"/>
-  <variable name="c_radius" value="sqrt(${z_pos})"/>
-  <variable name="c_size" value="${y_pos} + 1"/>
+
+  ${x_pos = 0}
+  ${y_pos = 1}
+  ${z_pos = 2}
+  ${c_radius = sqrt(z_pos)}
+  ${c_size = y_pos + 1}
+  
 	<worldbody>
-		<body pos="${x_pos} ${y_pos} ${z_pos}">
-			<geom type="cylinder" size="${c_radius} ${c_size}"/>
+		<body pos="$(x_pos) $(y_pos) $(z_pos)">
+			<geom type="cylinder" size="$(c_radius) $(c_size)"/>
 		</body>
 	</worldbody>
 </mujoco>
